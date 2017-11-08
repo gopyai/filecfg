@@ -3,7 +3,7 @@ package filecfg
 import (
 	"encoding/json"
 
-	"github.com/gopyai/err"
+	"github.com/gopyai/go-err"
 )
 
 // JsonMarshal is a helper for Configurator's Marshal() implementation

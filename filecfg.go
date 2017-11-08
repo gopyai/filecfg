@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/gopyai/err"
+	"github.com/gopyai/go-err"
 )
 
 type (
