@@ -19,10 +19,10 @@ type (
 		// Initialize the configuration content to default setting
 		Init()
 
-		// Check the configuration content. If it found invalid value then
-		// it should fix the value and return error. If there is no invalid
-		// value, then it will return nil.
-		CheckAndFix() error
+		// Check the configuration content.
+		// - If it found invalid value then it should fix the value and return true.
+		// - If everything is ok, then it will return false.
+		CheckAndFix() bool
 	}
 )
 
@@ -31,18 +31,17 @@ type (
 func Load(fileName string, cfg Configurator, isRewrite bool) {
 	b, e := ioutil.ReadFile(fileName)
 	if e != nil {
-		fmt.Println("There is no existing configuration file. Default configuration will be created. Please check and update if necessary.")
+		fmt.Println("There is no existing configuration file. Default configuration will be created. Please review.")
 		initAndExit(fileName, cfg)
 	}
 
 	if e := cfg.Unmarshal(b); e != nil {
-		fmt.Println("Invalid configuration. New one is created. Please check and update if necessary.")
+		fmt.Println("Invalid configuration. New one is created. Please review.")
 		initAndExit(fileName, cfg)
 	}
 
-	if e := cfg.CheckAndFix(); e != nil {
-		fmt.Println(e.Error())
-		fmt.Println("Configuration has been fixed. Please check and update if necessary.")
+	if cfg.CheckAndFix() {
+		fmt.Println("Please review/fix the configuration to continue.")
 		saveToFile(fileName, cfg.Marshal())
 		os.Exit(1)
 	}
@@ -59,5 +58,5 @@ func initAndExit(fileName string, cfg Configurator) {
 }
 
 func saveToFile(fileName string, b []byte) {
-	err.Panic(ioutil.WriteFile(fileName, b, 0600))
+	err.Panic(ioutil.WriteFile(fileName, b, 0777))
 }
