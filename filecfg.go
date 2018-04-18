@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-
-	"github.com/gopyai/go-err"
 )
 
 type (
@@ -58,5 +56,11 @@ func initAndExit(fileName string, cfg Configurator) {
 }
 
 func saveToFile(fileName string, b []byte) {
-	err.Panic(ioutil.WriteFile(fileName, b, 0777))
+	panicIf(ioutil.WriteFile(fileName, b, 0777))
+}
+
+func panicIf(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
